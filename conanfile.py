@@ -7,7 +7,7 @@ class GslConan(ConanFile):
     http://www.gnu.org/software/gsl/
     """
 
-    name = "GSL"
+    name = "gsl"
     version = "2.4"
     license = "GNU GPL"
     url = "http://www.gnu.org/software/gsl/"
