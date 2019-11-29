@@ -14,7 +14,7 @@ class GslConan(ConanFile):
     description = "GNU Scientific Library"
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
-    default_options = "shared=False"
+    default_options = "shared=True"
     generators = "cmake"
 
     def source(self):
@@ -26,6 +26,9 @@ class GslConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
+        if(self.options.shared):
+            cmake.definitions["BUILD_SHARED_LIBS"]=True
+
         cmake.configure(source_folder="gsl-2.4.0")
         cmake.build()
 
