@@ -9,5 +9,5 @@
 PID=$!
 while [ -d /proc/$PID ]
 do
-    tail -n0 -f output.log | grep "^["
+    tail -n0 -f output.log | grep "^\["
 done
