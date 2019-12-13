@@ -5,9 +5,10 @@
 # however if travis-ci hasn't seen stdout for   10min, it'll terminate the build.
 # This busy loops waiting for the build to finish while periodically updating stdout
 
-(./.travis/run.sh) &> output.log &
+(./.travis/run.sh) &> /dev/null &
 PID=$!
 while [ -d /proc/$PID ]
 do
-    tail -n0 -f output.log | grep "^\["
+    echo "Building..."
+    sleep 10s
 done
