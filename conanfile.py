@@ -31,6 +31,7 @@ class GslConan(ConanFile):
 
         if os.getenv("TRAVIS") is not None:
             cmake.definitions["GSL_DISABLE_WARNINGS"]="ON" #disable warnings for travis ci
+            cmake.definitions["CMAKE_C_FLAGS"]="-w" #disable warnings for travis ci
             
         cmake.configure(source_folder="gsl-2.4.0")
         cmake.build()
