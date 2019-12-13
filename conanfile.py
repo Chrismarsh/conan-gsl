@@ -8,7 +8,7 @@ class GslConan(ConanFile):
     """
 
     name = "gsl"
-    version = "2.4"
+    version = "2.6"
     license = "GNU GPL"
     url = "http://www.gnu.org/software/gsl/"
     description = "GNU Scientific Library"
@@ -20,20 +20,22 @@ class GslConan(ConanFile):
     def source(self):
         # downloading the archive is faster than cloning the repository
         # we're using ampl's github repo as it contains CMakeLists.txt already
-        tools.download('https://github.com/ampl/gsl/archive/v2.4.0.tar.gz',
-                       'gsl-2.4.0.tar.gz')
-        tools.unzip('gsl-2.4.0.tar.gz')
+        tools.download('https://github.com/ampl/gsl/archive/v2.6.0.tar.gz',
+                       'gsl-2.6.0.tar.gz')
+        tools.unzip('gsl-2.6.0.tar.gz')
 
     def build(self):
         cmake = CMake(self)
         if(self.options.shared):
             cmake.definitions["BUILD_SHARED_LIBS"]=True
 
-        if os.getenv("TRAVIS") is not None:
+        if os.getenv("TRAVIS") is not None or os.getenv("CI") is not None:
+            print("Detected CI, disabling GSL warnings")
             cmake.definitions["GSL_DISABLE_WARNINGS"]="ON" #disable warnings for travis ci
             cmake.definitions["CMAKE_C_FLAGS"]="-w" #disable warnings for travis ci
-            
-        cmake.configure(source_folder="gsl-2.4.0")
+            cmake.definitions["CMAKE_C_FLAGS_RELEASE"]="-w" #disable warnings for travis ci
+
+        cmake.configure(source_folder="gsl-2.6.0")
         cmake.build()
 
     def package(self):

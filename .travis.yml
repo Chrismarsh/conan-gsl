@@ -1,6 +1,6 @@
 env:
    global:
-      - CONAN_REFERENCE: "gsl/2.4"
+      - CONAN_REFERENCE: "gsl/2.6"
       - CONAN_USERNAME: "CHM"
       - CONAN_LOGIN_USERNAME: "chrismarsh"
       - CONAN_CHANNEL: "stable"
