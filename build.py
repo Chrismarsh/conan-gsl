@@ -2,7 +2,7 @@ from cpt.packager import ConanMultiPackager
 from collections import defaultdict
 
 if __name__ == "__main__":
-    builder = ConanMultiPackager(
+    builder = ConanMultiPackager(cppstds=[14],
                                 archs=["x86_64"],
                                 build_types=["Release"])
                               
