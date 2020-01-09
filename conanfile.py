@@ -58,4 +58,4 @@ class GslConan(ConanFile):
         self.copy("libgsl*.a", dst="lib", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = ["gsl"]
+        self.cpp_info.libs = ["gsl","gslcblas"]
