@@ -30,10 +30,12 @@ class GslConan(ConanFile):
             cmake.definitions["BUILD_SHARED_LIBS"]=True
 
         if os.getenv("TRAVIS") is not None or os.getenv("CI") is not None:
-            print("Detected CI, disabling GSL warnings")
+            # print("Detected CI, disabling GSL warnings")
             cmake.definitions["GSL_DISABLE_WARNINGS"]="ON" #disable warnings for travis ci
             cmake.definitions["CMAKE_C_FLAGS"]="-w" #disable warnings for travis ci
             cmake.definitions["CMAKE_C_FLAGS_RELEASE"]="-w" #disable warnings for travis ci
+            cmake.definitions["CMAKE_CXX_FLAGS"]="-w" #disable warnings for travis ci
+            cmake.definitions["CMAKE_CXX_FLAGS_RELEASE"]="-w" #disable warnings for travis ci
 
         cmake.configure(source_folder="gsl-2.6.0")
         cmake.build()

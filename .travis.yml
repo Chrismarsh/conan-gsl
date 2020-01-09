@@ -37,5 +37,6 @@ install:
 
 script:
    - chmod +x .travis/run.sh
-   - chmod +x travisci-conan_supressoutput.sh
-   - ./travisci-conan_supressoutput.sh
+   - ./.travis/run.sh
+#   - chmod +x travisci-conan_supressoutput.sh
+#   - ./travisci-conan_supressoutput.sh
