@@ -1,4 +1,4 @@
-from conans import ConanFile, CMake, tools
+from conans import ConanFile, AutoToolsBuildEnvironment, tools
 import os
 
 class GslConan(ConanFile):
@@ -25,20 +25,28 @@ class GslConan(ConanFile):
         tools.untargz('gsl-2.6.0.tar.gz')
 
     def build(self):
-        cmake = CMake(self)
-        if(self.options.shared):
-            cmake.definitions["BUILD_SHARED_LIBS"]=True
+        autotools = AutoToolsBuildEnvironment(self)
 
+        configure_args = [ ]
+
+        if(self.options.shared):
+            configure_args.append("--enable-shared")
+        if(not self.options.shared):
+            configure_args.append("--enable-static")
+
+        #disable warnings for travis ci
         if os.getenv("TRAVIS") is not None or os.getenv("CI") is not None:
             # print("Detected CI, disabling GSL warnings")
-            cmake.definitions["GSL_DISABLE_WARNINGS"]="ON" #disable warnings for travis ci
-            cmake.definitions["CMAKE_C_FLAGS"]="-w" #disable warnings for travis ci
-            cmake.definitions["CMAKE_C_FLAGS_RELEASE"]="-w" #disable warnings for travis ci
-            cmake.definitions["CMAKE_CXX_FLAGS"]="-w" #disable warnings for travis ci
-            cmake.definitions["CMAKE_CXX_FLAGS_RELEASE"]="-w" #disable warnings for travis ci
 
-        cmake.configure(source_folder="gsl-2.6")
-        cmake.build()
+            val = os.environ.get("CFLAGS", "")
+            os.environ["CFLAGS"] = val + " -w"
+
+            val = os.environ.get("CPPFLAGS", "")
+            os.environ["CPPFLAGS"] = val + " -w"
+
+        autotools.configure(configure_dir=self.source_folder+'/gsl-'+self.version,  args=configure_args)
+        autotools.make()
+        autotools.install()
 
     def package(self):
         # all include files should go in include/gsl
