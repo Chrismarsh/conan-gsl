@@ -22,7 +22,7 @@ class GslConan(ConanFile):
         # we're using ampl's github repo as it contains CMakeLists.txt already
         tools.download('https://mirror.csclub.uwaterloo.ca/gnu/gsl/gsl-2.6.tar.gz',
                        'gsl-2.6.0.tar.gz')
-        tools.unzip('gsl-2.6.0.tar.gz')
+        tools.untargz('gsl-2.6.0.tar.gz')
 
     def build(self):
         cmake = CMake(self)
@@ -37,7 +37,7 @@ class GslConan(ConanFile):
             cmake.definitions["CMAKE_CXX_FLAGS"]="-w" #disable warnings for travis ci
             cmake.definitions["CMAKE_CXX_FLAGS_RELEASE"]="-w" #disable warnings for travis ci
 
-        cmake.configure(source_folder="gsl-2.6.0")
+        cmake.configure(source_folder="gsl-2.6")
         cmake.build()
 
     def package(self):
