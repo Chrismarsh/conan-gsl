@@ -24,7 +24,7 @@ class GslConan(ConanFile):
         tools.untargz('gsl-%s.tar.gz' %self.version)
 
         dir = 'gsl-%s' %self.version
-        tools.replace_in_file(dir+"/configure", r"-install_name \$rpath/", "-install_name ")
+        tools.replace_in_file(dir+"/configure", r"-install_name \$rpath/", "-install_name @rpath/")
 
 
 
