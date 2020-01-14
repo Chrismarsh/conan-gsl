@@ -20,9 +20,14 @@ class GslConan(ConanFile):
     def source(self):
         # downloading the archive is faster than cloning the repository
         # we're using ampl's github repo as it contains CMakeLists.txt already
-        tools.download('https://mirror.csclub.uwaterloo.ca/gnu/gsl/gsl-2.6.tar.gz',
-                       'gsl-2.6.0.tar.gz')
-        tools.untargz('gsl-2.6.0.tar.gz')
+        tools.download('https://mirror.csclub.uwaterloo.ca/gnu/gsl/gsl-%s.tar.gz' %self.version)
+        tools.untargz('gsl-%s.tar.gz' %self.version)
+
+        dir = 'gsl-%s' %self.version
+        tools.replace_in_file(dir+"/configure", r"-install_name \$rpath/", "-install_name ")
+
+
+
 
     def build(self):
         autotools = AutoToolsBuildEnvironment(self)
