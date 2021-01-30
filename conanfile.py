@@ -8,25 +8,25 @@ class GslConan(ConanFile):
     """
 
     name = "gsl"
-    version = "2.6"
     license = "GNU GPL"
     url = "http://www.gnu.org/software/gsl/"
     description = "GNU Scientific Library"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
-    default_options = "shared=True"
+
+    options = {
+        "shared": [True, False]
+    }
+    default_options = {
+        "shared": True
+    }
     generators = "cmake"
 
+    _source_subfolder = 'gsl'
+
     def source(self):
-        # downloading the archive is faster than cloning the repository
-        # we're using ampl's github repo as it contains CMakeLists.txt already
-        tools.download('https://mirror.csclub.uwaterloo.ca/gnu/gsl/gsl-%s.tar.gz' %self.version, 'gsl-%s.tar.gz' %self.version)
-        tools.untargz('gsl-%s.tar.gz' %self.version)
-
-        dir = 'gsl-%s' %self.version
-        tools.replace_in_file(dir+"/configure", r"-install_name \$rpath/", "-install_name @rpath/")
-
-
+        tools.get(**self.conan_data["sources"][self.version])
+        os.rename("gsl-{}".format(self.version), self._source_subfolder)
+        tools.replace_in_file(self._source_subfolder+"/configure", r"-install_name \$rpath/", "-install_name @rpath/")
 
 
     def build(self):
@@ -40,18 +40,20 @@ class GslConan(ConanFile):
             configure_args.append("--enable-static")
 
         #disable warnings for travis ci
-        if os.getenv("TRAVIS") is not None or os.getenv("CI") is not None:
+        if os.getenv("CI") is not None:
             # print("Detected CI, disabling GSL warnings")
-
             val = os.environ.get("CFLAGS", "")
             os.environ["CFLAGS"] = val + " -w"
 
             val = os.environ.get("CPPFLAGS", "")
             os.environ["CPPFLAGS"] = val + " -w"
 
-        autotools.configure(configure_dir=self.source_folder+'/gsl-'+self.version,  args=configure_args)
-        autotools.make()
-        autotools.install()
+        with tools.chdir(self._source_subfolder):
+
+            autotools.configure(args=configure_args)
+            autotools.make()
+            autotools.install()
+
 
     def package(self):
         # all include files should go in include/gsl
