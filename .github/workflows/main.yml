@@ -60,7 +60,7 @@ jobs:
           pip install conan_package_tools
           
       - name: env linux
-        if: ${{ matrix.cfg.os  == 'ubuntu-latest' }}
+        if: startsWith( matrix.cfg.os, 'ubuntu' )
         uses: allenevans/set-env@v2.0.0
         with:
           CONAN_GCC_VERSIONS: ${{ matrix.cfg.version }}
