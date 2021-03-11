@@ -21,6 +21,10 @@ env:
   CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
   CONAN_STABLE_BRANCH_PATTERN: "stable/*"
   CONAN_UPLOAD_ONLY_WHEN_STABLE: "1"
+  CONAN_REQUEST_TIMEOUT: 600
+  CONAN_RETRY: 30
+  CONAN_RETRY_WAIT: 60
+
   MAKEFLAGS: "-j2"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -58,7 +62,14 @@ jobs:
         run: |
           pip install conan --upgrade
           pip install conan_package_tools
-          
+
+      - name: Update apt-get
+        if: startsWith( matrix.cfg.os, 'ubuntu' )
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade
+
+
       - name: env linux
         if: startsWith( matrix.cfg.os, 'ubuntu' )
         uses: allenevans/set-env@v2.0.0
