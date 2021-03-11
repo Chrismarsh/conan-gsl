@@ -67,7 +67,7 @@ jobs:
         if: startsWith( matrix.cfg.os, 'ubuntu' )
         run: |
           sudo apt-get update
-          sudo apt-get upgrade
+          sudo env ACCEPT_EULA=Y apt-get upgrade -y
 
 
       - name: env linux
